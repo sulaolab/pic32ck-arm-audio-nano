@@ -1,0 +1,320 @@
+/*
+ * dsp_coeffs.c - GENERATED FILE, DO NOT EDIT.
+ *
+ * Produced by the project's host reference generator.
+ *
+ * 12th-order Butterworth low-pass, fc = 9600 Hz at fs = 48000 Hz,
+ * as 6 second-order sections in CMSIS DF2T layout
+ * {b0, b1, b2, -a1, -a2} per stage. Note the negated feedback terms:
+ * the kernel computes d1 = b1*x + d2 + a1*y, so a1 stored here is
+ * -a1_standard.
+ *
+ * Every value is printed with 9 significant digits, which round-trips
+ * binary32 exactly. dsp_coeffs_bw12_lp_bits[] holds the bit pattern each
+ * literal must parse to, and dsp_coeffs_self_check() compares them - so a
+ * compiler that parsed a literal differently is caught, not assumed away.
+ */
+#include "app_config.h"
+
+/* Measurement-only data: compiles to nothing unless the bench is built, so
+ * the live audio configuration is unchanged. */
+#if APP_ENABLE_DSP_BENCH
+
+#include "dsp_coeffs.h"
+
+const float32_t dsp_coeffs_bw12_lp[DSP_COEFFS_BW12_LP_STAGES * 5] = {
+    /* stage 0 : damping 1.98288972, standard a1 -0.318095422, a2 +0.0293784104 */
+    +0.177820742f, +0.355641484f, +0.177820742f, +0.318095416f, -0.0293784104f,
+    /* stage 1 : damping 1.84775907, standard a1 -0.328975677, a2 +0.0645876549 */
+    +0.183902994f, +0.367805988f, +0.183902994f, +0.328975677f, -0.0645876527f,
+    /* stage 2 : damping 1.58670668, standard a1 -0.352251686, a2 +0.1399104 */
+    +0.196914673f, +0.393829346f, +0.196914673f, +0.352251679f, -0.1399104f,
+    /* stage 3 : damping 1.21752286, standard a1 -0.391416778, a2 +0.2666513 */
+    +0.218808636f, +0.437617272f, +0.218808636f, +0.391416788f, -0.266651303f,
+    /* stage 4 : damping 0.765366865, standard a1 -0.453119521, a2 +0.466325571 */
+    +0.253301501f, +0.506603003f, +0.253301501f, +0.453119516f, -0.466325581f,
+    /* stage 5 : damping 0.261052384, standard a1 -0.549784908, a2 +0.779141334 */
+    +0.307339102f, +0.614678204f, +0.307339102f, +0.549784899f, -0.779141307f,
+};
+
+const uint32_t dsp_coeffs_bw12_lp_bits[DSP_COEFFS_BW12_LP_STAGES * 5] = {
+    0x3E3616A4u, 0x3EB616A4u, 0x3E3616A4u, 0x3EA2DD67u, 0xBCF0AAFEu,
+    0x3E3C5111u, 0x3EBC5111u, 0x3E3C5111u, 0x3EA86F80u, 0xBD844688u,
+    0x3E49A400u, 0x3EC9A400u, 0x3E49A400u, 0x3EB45A55u, 0xBE0F44ACu,
+    0x3E600F5Fu, 0x3EE00F5Fu, 0x3E600F5Fu, 0x3EC867C8u, 0xBE888685u,
+    0x3E81B0BCu, 0x3F01B0BCu, 0x3E81B0BCu, 0x3EE7FF48u, 0xBEEEC23Au,
+    0x3E9D5B8Du, 0x3F1D5B8Du, 0x3E9D5B8Du, 0x3F0CBEB4u, 0xBF4775CEu,
+};
+
+/*
+ * Long cascade bank: 84 second-order ALLPASS sections.
+ *
+ * |H| = 1 at every frequency for every section, so cascade length does
+ * not change the signal level - the reason a Butterworth low-pass cannot
+ * be used here. 84 low-pass sections would decay the signal into
+ * denormals and the timing would measure denormal handling instead of
+ * the kernel. Pole radius 0.50..0.90, angle 0.16..2.98 rad; no two
+ * sections share a coefficient set.
+ *
+ * This is an instrument for timing a cascade length, not a filter
+ * anyone would ship.
+ */
+const float32_t dsp_coeffs_ap84[DSP_COEFFS_AP_STAGES * 5] = {
+    /* section 0 : standard a1 +0.987688341, a2 +0.25 */
+    +0.25f, +0.987688363f, +1.0f, -0.987688363f, -0.25f,
+    /* section 1 : standard a1 +0.99125034, a2 +0.254842503 */
+    +0.25484249f, +0.991250336f, +1.0f, -0.991250336f, -0.25484249f,
+    /* section 2 : standard a1 +0.993537414, a2 +0.259731456 */
+    +0.259731442f, +0.993537426f, +1.0f, -0.993537426f, -0.259731442f,
+    /* section 3 : standard a1 +0.994525027, a2 +0.26466686 */
+    +0.264666855f, +0.994525015f, +1.0f, -0.994525015f, -0.264666855f,
+    /* section 4 : standard a1 +0.994190321, a2 +0.269648715 */
+    +0.269648701f, +0.994190335f, +1.0f, -0.994190335f, -0.269648701f,
+    /* section 5 : standard a1 +0.992512167, a2 +0.274677021 */
+    +0.274677008f, +0.992512167f, +1.0f, -0.992512167f, -0.274677008f,
+    /* section 6 : standard a1 +0.989471216, a2 +0.279751778 */
+    +0.279751778f, +0.989471197f, +1.0f, -0.989471197f, -0.279751778f,
+    /* section 7 : standard a1 +0.985049947, a2 +0.284872986 */
+    +0.284872979f, +0.985049963f, +1.0f, -0.985049963f, -0.284872979f,
+    /* section 8 : standard a1 +0.979232707, a2 +0.290040645 */
+    +0.290040642f, +0.979232728f, +1.0f, -0.979232728f, -0.290040642f,
+    /* section 9 : standard a1 +0.972005759, a2 +0.295254754 */
+    +0.295254767f, +0.972005785f, +1.0f, -0.972005785f, -0.295254767f,
+    /* section 10 : standard a1 +0.963357316, a2 +0.300515314 */
+    +0.300515324f, +0.963357329f, +1.0f, -0.963357329f, -0.300515324f,
+    /* section 11 : standard a1 +0.953277584, a2 +0.305822325 */
+    +0.305822313f, +0.953277588f, +1.0f, -0.953277588f, -0.305822313f,
+    /* section 12 : standard a1 +0.941758793, a2 +0.311175787 */
+    +0.311175793f, +0.941758811f, +1.0f, -0.941758811f, -0.311175793f,
+    /* section 13 : standard a1 +0.928795227, a2 +0.3165757 */
+    +0.316575706f, +0.928795218f, +1.0f, -0.928795218f, -0.316575706f,
+    /* section 14 : standard a1 +0.914383258, a2 +0.322022064 */
+    +0.322022051f, +0.914383233f, +1.0f, -0.914383233f, -0.322022051f,
+    /* section 15 : standard a1 +0.898521366, a2 +0.327514879 */
+    +0.327514887f, +0.898521364f, +1.0f, -0.898521364f, -0.327514887f,
+    /* section 16 : standard a1 +0.881210166, a2 +0.333054144 */
+    +0.333054155f, +0.881210148f, +1.0f, -0.881210148f, -0.333054155f,
+    /* section 17 : standard a1 +0.862452428, a2 +0.338639861 */
+    +0.338639855f, +0.862452447f, +1.0f, -0.862452447f, -0.338639855f,
+    /* section 18 : standard a1 +0.84225309, a2 +0.344272028 */
+    +0.344272017f, +0.842253089f, +1.0f, -0.842253089f, -0.344272017f,
+    /* section 19 : standard a1 +0.820619274, a2 +0.349950646 */
+    +0.349950641f, +0.820619285f, +1.0f, -0.820619285f, -0.349950641f,
+    /* section 20 : standard a1 +0.797560301, a2 +0.355675715 */
+    +0.355675727f, +0.797560275f, +1.0f, -0.797560275f, -0.355675727f,
+    /* section 21 : standard a1 +0.77308769, a2 +0.361447235 */
+    +0.361447245f, +0.77308768f, +1.0f, -0.77308768f, -0.361447245f,
+    /* section 22 : standard a1 +0.747215168, a2 +0.367265205 */
+    +0.367265195f, +0.747215152f, +1.0f, -0.747215152f, -0.367265195f,
+    /* section 23 : standard a1 +0.719958673, a2 +0.373129627 */
+    +0.373129636f, +0.719958663f, +1.0f, -0.719958663f, -0.373129636f,
+    /* section 24 : standard a1 +0.691336343, a2 +0.379040499 */
+    +0.379040509f, +0.691336334f, +1.0f, -0.691336334f, -0.379040509f,
+    /* section 25 : standard a1 +0.661368522, a2 +0.384997823 */
+    +0.384997815f, +0.661368549f, +1.0f, -0.661368549f, -0.384997815f,
+    /* section 26 : standard a1 +0.630077741, a2 +0.391001597 */
+    +0.391001582f, +0.63007772f, +1.0f, -0.63007772f, -0.391001582f,
+    /* section 27 : standard a1 +0.597488714, a2 +0.397051822 */
+    +0.397051811f, +0.597488701f, +1.0f, -0.597488701f, -0.397051811f,
+    /* section 28 : standard a1 +0.563628319, a2 +0.403148498 */
+    +0.403148502f, +0.563628316f, +1.0f, -0.563628316f, -0.403148502f,
+    /* section 29 : standard a1 +0.528525578, a2 +0.409291624 */
+    +0.409291625f, +0.528525591f, +1.0f, -0.528525591f, -0.409291625f,
+    /* section 30 : standard a1 +0.492211639, a2 +0.415481202 */
+    +0.41548121f, +0.49221164f, +1.0f, -0.49221164f, -0.41548121f,
+    /* section 31 : standard a1 +0.454719749, a2 +0.42171723 */
+    +0.421717227f, +0.454719752f, +1.0f, -0.454719752f, -0.421717227f,
+    /* section 32 : standard a1 +0.416085225, a2 +0.42799971 */
+    +0.427999705f, +0.416085213f, +1.0f, -0.416085213f, -0.427999705f,
+    /* section 33 : standard a1 +0.376345424, a2 +0.43432864 */
+    +0.434328645f, +0.376345426f, +1.0f, -0.376345426f, -0.434328645f,
+    /* section 34 : standard a1 +0.335539709, a2 +0.440704021 */
+    +0.440704018f, +0.335539699f, +1.0f, -0.335539699f, -0.440704018f,
+    /* section 35 : standard a1 +0.293709409, a2 +0.447125853 */
+    +0.447125852f, +0.293709397f, +1.0f, -0.293709397f, -0.447125852f,
+    /* section 36 : standard a1 +0.250897777, a2 +0.453594136 */
+    +0.453594148f, +0.250897765f, +1.0f, -0.250897765f, -0.453594148f,
+    /* section 37 : standard a1 +0.207149952, a2 +0.460108869 */
+    +0.460108876f, +0.207149953f, +1.0f, -0.207149953f, -0.460108876f,
+    /* section 38 : standard a1 +0.162512904, a2 +0.466670054 */
+    +0.466670066f, +0.162512898f, +1.0f, -0.162512898f, -0.466670066f,
+    /* section 39 : standard a1 +0.117035389, a2 +0.473277689 */
+    +0.473277688f, +0.117035389f, +1.0f, -0.117035389f, -0.473277688f,
+    /* section 40 : standard a1 +0.0707678967, a2 +0.479931775 */
+    +0.479931772f, +0.0707678944f, +1.0f, -0.0707678944f, -0.479931772f,
+    /* section 41 : standard a1 +0.0237625893, a2 +0.486632312 */
+    +0.486632317f, +0.0237625893f, +1.0f, -0.0237625893f, -0.486632317f,
+    /* section 42 : standard a1 -0.0239267523, a2 +0.4933793 */
+    +0.493379295f, -0.0239267517f, +1.0f, +0.0239267517f, -0.493379295f,
+    /* section 43 : standard a1 -0.0722447919, a2 +0.500172739 */
+    +0.500172734f, -0.0722447932f, +1.0f, +0.0722447932f, -0.500172734f,
+    /* section 44 : standard a1 -0.121134702, a2 +0.507012629 */
+    +0.507012606f, -0.121134706f, +1.0f, +0.121134706f, -0.507012606f,
+    /* section 45 : standard a1 -0.170538232, a2 +0.513898969 */
+    +0.513898969f, -0.170538232f, +1.0f, +0.170538232f, -0.513898969f,
+    /* section 46 : standard a1 -0.220395775, a2 +0.520831761 */
+    +0.520831764f, -0.220395774f, +1.0f, +0.220395774f, -0.520831764f,
+    /* section 47 : standard a1 -0.27064644, a2 +0.527811003 */
+    +0.527810991f, -0.270646453f, +1.0f, +0.270646453f, -0.527810991f,
+    /* section 48 : standard a1 -0.321228128, a2 +0.534836696 */
+    +0.534836709f, -0.321228117f, +1.0f, +0.321228117f, -0.534836709f,
+    /* section 49 : standard a1 -0.372077609, a2 +0.54190884 */
+    +0.54190886f, -0.372077614f, +1.0f, +0.372077614f, -0.54190886f,
+    /* section 50 : standard a1 -0.423130596, a2 +0.549027435 */
+    +0.549027443f, -0.423130602f, +1.0f, +0.423130602f, -0.549027443f,
+    /* section 51 : standard a1 -0.474321831, a2 +0.556192481 */
+    +0.556192458f, -0.474321842f, +1.0f, +0.474321842f, -0.556192458f,
+    /* section 52 : standard a1 -0.525585164, a2 +0.563403977 */
+    +0.563403964f, -0.525585175f, +1.0f, +0.525585175f, -0.563403964f,
+    /* section 53 : standard a1 -0.57685364, a2 +0.570661925 */
+    +0.570661902f, -0.576853633f, +1.0f, +0.576853633f, -0.570661902f,
+    /* section 54 : standard a1 -0.628059585, a2 +0.577966323 */
+    +0.577966332f, -0.628059566f, +1.0f, +0.628059566f, -0.577966332f,
+    /* section 55 : standard a1 -0.679134692, a2 +0.585317172 */
+    +0.585317194f, -0.679134667f, +1.0f, +0.679134667f, -0.585317194f,
+    /* section 56 : standard a1 -0.730010112, a2 +0.592714472 */
+    +0.592714489f, -0.730010092f, +1.0f, +0.730010092f, -0.592714489f,
+    /* section 57 : standard a1 -0.780616546, a2 +0.600158223 */
+    +0.600158215f, -0.780616522f, +1.0f, +0.780616522f, -0.600158215f,
+    /* section 58 : standard a1 -0.830884337, a2 +0.607648425 */
+    +0.607648432f, -0.830884337f, +1.0f, +0.830884337f, -0.607648432f,
+    /* section 59 : standard a1 -0.88074356, a2 +0.615185078 */
+    +0.615185082f, -0.880743563f, +1.0f, +0.880743563f, -0.615185082f,
+    /* section 60 : standard a1 -0.930124123, a2 +0.622768181 */
+    +0.622768164f, -0.930124104f, +1.0f, +0.930124104f, -0.622768164f,
+    /* section 61 : standard a1 -0.978955857, a2 +0.630397736 */
+    +0.630397737f, -0.978955865f, +1.0f, +0.978955865f, -0.630397737f,
+    /* section 62 : standard a1 -1.02716861, a2 +0.638073741 */
+    +0.638073742f, -1.02716863f, +1.0f, +1.02716863f, -0.638073742f,
+    /* section 63 : standard a1 -1.07469236, a2 +0.645796197 */
+    +0.64579618f, -1.07469237f, +1.0f, +1.07469237f, -0.64579618f,
+    /* section 64 : standard a1 -1.1214573, a2 +0.653565104 */
+    +0.653565109f, -1.12145734f, +1.0f, +1.12145734f, -0.653565109f,
+    /* section 65 : standard a1 -1.16739391, a2 +0.661380462 */
+    +0.66138047f, -1.16739392f, +1.0f, +1.16739392f, -0.66138047f,
+    /* section 66 : standard a1 -1.21243312, a2 +0.66924227 */
+    +0.669242263f, -1.2124331f, +1.0f, +1.2124331f, -0.669242263f,
+    /* section 67 : standard a1 -1.25650635, a2 +0.67715053 */
+    +0.677150548f, -1.25650632f, +1.0f, +1.25650632f, -0.677150548f,
+    /* section 68 : standard a1 -1.29954564, a2 +0.68510524 */
+    +0.685105264f, -1.29954565f, +1.0f, +1.29954565f, -0.685105264f,
+    /* section 69 : standard a1 -1.34148372, a2 +0.693106402 */
+    +0.693106413f, -1.34148371f, +1.0f, +1.34148371f, -0.693106413f,
+    /* section 70 : standard a1 -1.38225414, a2 +0.701154014 */
+    +0.701153994f, -1.38225412f, +1.0f, +1.38225412f, -0.701153994f,
+    /* section 71 : standard a1 -1.42179135, a2 +0.709248077 */
+    +0.709248066f, -1.42179132f, +1.0f, +1.42179132f, -0.709248066f,
+    /* section 72 : standard a1 -1.46003081, a2 +0.717388591 */
+    +0.71738857f, -1.46003079f, +1.0f, +1.46003079f, -0.71738857f,
+    /* section 73 : standard a1 -1.49690906, a2 +0.725575555 */
+    +0.725575566f, -1.49690902f, +1.0f, +1.49690902f, -0.725575566f,
+    /* section 74 : standard a1 -1.53236385, a2 +0.733808971 */
+    +0.733808994f, -1.53236389f, +1.0f, +1.53236389f, -0.733808994f,
+    /* section 75 : standard a1 -1.5663342, a2 +0.742088837 */
+    +0.742088854f, -1.56633425f, +1.0f, +1.56633425f, -0.742088854f,
+    /* section 76 : standard a1 -1.59876052, a2 +0.750415155 */
+    +0.750415146f, -1.59876049f, +1.0f, +1.59876049f, -0.750415146f,
+    /* section 77 : standard a1 -1.62958471, a2 +0.758787923 */
+    +0.75878793f, -1.62958467f, +1.0f, +1.62958467f, -0.75878793f,
+    /* section 78 : standard a1 -1.65875022, a2 +0.767207142 */
+    +0.767207146f, -1.65875018f, +1.0f, +1.65875018f, -0.767207146f,
+    /* section 79 : standard a1 -1.68620214, a2 +0.775672812 */
+    +0.775672793f, -1.68620217f, +1.0f, +1.68620217f, -0.775672793f,
+    /* section 80 : standard a1 -1.71188734, a2 +0.784184933 */
+    +0.784184933f, -1.71188736f, +1.0f, +1.71188736f, -0.784184933f,
+    /* section 81 : standard a1 -1.73575449, a2 +0.792743504 */
+    +0.792743504f, -1.73575449f, +1.0f, +1.73575449f, -0.792743504f,
+    /* section 82 : standard a1 -1.75775418, a2 +0.801348527 */
+    +0.801348507f, -1.75775421f, +1.0f, +1.75775421f, -0.801348507f,
+    /* section 83 : standard a1 -1.77783901, a2 +0.81 */
+    +0.810000002f, -1.77783906f, +1.0f, +1.77783906f, -0.810000002f,
+};
+
+const uint32_t dsp_coeffs_ap84_bits[DSP_COEFFS_AP_STAGES * 5] = {
+    0x3E800000u, 0x3F7CD925u, 0x3F800000u, 0xBF7CD925u, 0xBE800000u,
+    0x3E827AB7u, 0x3F7DC295u, 0x3F800000u, 0xBF7DC295u, 0xBE827AB7u,
+    0x3E84FB85u, 0x3F7E5878u, 0x3F800000u, 0xBF7E5878u, 0xBE84FB85u,
+    0x3E87826Au, 0x3F7E9931u, 0x3F800000u, 0xBF7E9931u, 0xBE87826Au,
+    0x3E8A0F65u, 0x3F7E8342u, 0x3F800000u, 0xBF7E8342u, 0xBE8A0F65u,
+    0x3E8CA277u, 0x3F7E1547u, 0x3F800000u, 0xBF7E1547u, 0xBE8CA277u,
+    0x3E8F3BA0u, 0x3F7D4DFCu, 0x3F800000u, 0xBF7D4DFCu, 0xBE8F3BA0u,
+    0x3E91DADFu, 0x3F7C2C3Cu, 0x3F800000u, 0xBF7C2C3Cu, 0xBE91DADFu,
+    0x3E948035u, 0x3F7AAEFFu, 0x3F800000u, 0xBF7AAEFFu, 0xBE948035u,
+    0x3E972BA2u, 0x3F78D55Fu, 0x3F800000u, 0xBF78D55Fu, 0xBE972BA2u,
+    0x3E99DD25u, 0x3F769E96u, 0x3F800000u, 0xBF769E96u, 0xBE99DD25u,
+    0x3E9C94BEu, 0x3F740A00u, 0x3F800000u, 0xBF740A00u, 0xBE9C94BEu,
+    0x3E9F526Fu, 0x3F71171Bu, 0x3F800000u, 0xBF71171Bu, 0xBE9F526Fu,
+    0x3EA21636u, 0x3F6DC586u, 0x3F800000u, 0xBF6DC586u, 0xBEA21636u,
+    0x3EA4E013u, 0x3F6A1505u, 0x3F800000u, 0xBF6A1505u, 0xBEA4E013u,
+    0x3EA7B008u, 0x3F66057Fu, 0x3F800000u, 0xBF66057Fu, 0xBEA7B008u,
+    0x3EAA8613u, 0x3F6196FDu, 0x3F800000u, 0xBF6196FDu, 0xBEAA8613u,
+    0x3EAD6234u, 0x3F5CC9AFu, 0x3F800000u, 0xBF5CC9AFu, 0xBEAD6234u,
+    0x3EB0446Cu, 0x3F579DE6u, 0x3F800000u, 0xBF579DE6u, 0xBEB0446Cu,
+    0x3EB32CBBu, 0x3F52141Bu, 0x3F800000u, 0xBF52141Bu, 0xBEB32CBBu,
+    0x3EB61B21u, 0x3F4C2CE9u, 0x3F800000u, 0xBF4C2CE9u, 0xBEB61B21u,
+    0x3EB90F9Du, 0x3F45E913u, 0x3F800000u, 0xBF45E913u, 0xBEB90F9Du,
+    0x3EBC0A2Fu, 0x3F3F497Eu, 0x3F800000u, 0xBF3F497Eu, 0xBEBC0A2Fu,
+    0x3EBF0AD9u, 0x3F384F36u, 0x3F800000u, 0xBF384F36u, 0xBEBF0AD9u,
+    0x3EC21199u, 0x3F30FB6Bu, 0x3F800000u, 0xBF30FB6Bu, 0xBEC21199u,
+    0x3EC51E6Fu, 0x3F294F73u, 0x3F800000u, 0xBF294F73u, 0xBEC51E6Fu,
+    0x3EC8315Cu, 0x3F214CC6u, 0x3F800000u, 0xBF214CC6u, 0xBEC8315Cu,
+    0x3ECB4A60u, 0x3F18F505u, 0x3F800000u, 0xBF18F505u, 0xBECB4A60u,
+    0x3ECE697Bu, 0x3F1049F2u, 0x3F800000u, 0xBF1049F2u, 0xBECE697Bu,
+    0x3ED18EACu, 0x3F074D74u, 0x3F800000u, 0xBF074D74u, 0xBED18EACu,
+    0x3ED4B9F4u, 0x3EFC032Au, 0x3F800000u, 0xBEFC032Au, 0xBED4B9F4u,
+    0x3ED7EB52u, 0x3EE8D107u, 0x3F800000u, 0xBEE8D107u, 0xBED7EB52u,
+    0x3EDB22C7u, 0x3ED5091Fu, 0x3F800000u, 0xBED5091Fu, 0xBEDB22C7u,
+    0x3EDE6053u, 0x3EC0B059u, 0x3F800000u, 0xBEC0B059u, 0xBEDE6053u,
+    0x3EE1A3F5u, 0x3EABCBDCu, 0x3F800000u, 0xBEABCBDCu, 0xBEE1A3F5u,
+    0x3EE4EDAEu, 0x3E966114u, 0x3F800000u, 0xBE966114u, 0xBEE4EDAEu,
+    0x3EE83D7Eu, 0x3E8075ACu, 0x3F800000u, 0xBE8075ACu, 0xBEE83D7Eu,
+    0x3EEB9364u, 0x3E541F1Eu, 0x3F800000u, 0xBE541F1Eu, 0xBEEB9364u,
+    0x3EEEEF61u, 0x3E2669C8u, 0x3F800000u, 0xBE2669C8u, 0xBEEEEF61u,
+    0x3EF25174u, 0x3DEFB040u, 0x3F800000u, 0xBDEFB040u, 0xBEF25174u,
+    0x3EF5B99Eu, 0x3D90EEC2u, 0x3F800000u, 0xBD90EEC2u, 0xBEF5B99Eu,
+    0x3EF927DFu, 0x3CC2A9C3u, 0x3F800000u, 0xBCC2A9C3u, 0xBEF927DFu,
+    0x3EFC9C36u, 0xBCC40209u, 0x3F800000u, 0x3CC40209u, 0xBEFC9C36u,
+    0x3F000B52u, 0xBD93F514u, 0x3F800000u, 0x3D93F514u, 0xBF000B52u,
+    0x3F01CB94u, 0xBDF81579u, 0x3F800000u, 0x3DF81579u, 0xBF01CB94u,
+    0x3F038EE2u, 0xBE2EA193u, 0x3F800000u, 0x3E2EA193u, 0xBF038EE2u,
+    0x3F05553Bu, 0xBE61AF6Eu, 0x3F800000u, 0x3E61AF6Eu, 0xBF05553Bu,
+    0x3F071E9Fu, 0xBE8A922Cu, 0x3F800000u, 0x3E8A922Cu, 0xBF071E9Fu,
+    0x3F08EB0Fu, 0xBEA47803u, 0x3F800000u, 0x3EA47803u, 0xBF08EB0Fu,
+    0x3F0ABA8Au, 0xBEBE80F5u, 0x3F800000u, 0x3EBE80F5u, 0xBF0ABA8Au,
+    0x3F0C8D10u, 0xBED8A493u, 0x3F800000u, 0x3ED8A493u, 0xBF0C8D10u,
+    0x3F0E62A1u, 0xBEF2DA50u, 0x3F800000u, 0x3EF2DA50u, 0xBF0E62A1u,
+    0x3F103B3Eu, 0xBF068CC0u, 0x3F800000u, 0x3F068CC0u, 0xBF103B3Eu,
+    0x3F1216E6u, 0xBF13ACAEu, 0x3F800000u, 0x3F13ACAEu, 0xBF1216E6u,
+    0x3F13F59Au, 0xBF20C883u, 0x3F800000u, 0x3F20C883u, 0xBF13F59Au,
+    0x3F15D759u, 0xBF2DDBC5u, 0x3F800000u, 0x3F2DDBC5u, 0xBF15D759u,
+    0x3F17BC23u, 0xBF3AE1F1u, 0x3F800000u, 0x3F3AE1F1u, 0xBF17BC23u,
+    0x3F19A3F8u, 0xBF47D67Cu, 0x3F800000u, 0x3F47D67Cu, 0xBF19A3F8u,
+    0x3F1B8ED9u, 0xBF54B4D6u, 0x3F800000u, 0x3F54B4D6u, 0xBF1B8ED9u,
+    0x3F1D7CC5u, 0xBF617869u, 0x3F800000u, 0x3F617869u, 0xBF1D7CC5u,
+    0x3F1F6DBCu, 0xBF6E1C9Du, 0x3F800000u, 0x3F6E1C9Du, 0xBF1F6DBCu,
+    0x3F2161BFu, 0xBF7A9CDAu, 0x3F800000u, 0x3F7A9CDAu, 0xBF2161BFu,
+    0x3F2358CDu, 0xBF837A43u, 0x3F800000u, 0x3F837A43u, 0xBF2358CDu,
+    0x3F2552E6u, 0xBF898F85u, 0x3F800000u, 0x3F898F85u, 0xBF2552E6u,
+    0x3F27500Bu, 0xBF8F8BEAu, 0x3F800000u, 0x3F8F8BEAu, 0xBF27500Bu,
+    0x3F29503Bu, 0xBF956D2Au, 0x3F800000u, 0x3F956D2Au, 0xBF29503Bu,
+    0x3F2B5376u, 0xBF9B3102u, 0x3F800000u, 0x3F9B3102u, 0xBF2B5376u,
+    0x3F2D59BDu, 0xBFA0D533u, 0x3F800000u, 0x3FA0D533u, 0xBF2D59BDu,
+    0x3F2F630Fu, 0xBFA65783u, 0x3F800000u, 0x3FA65783u, 0xBF2F630Fu,
+    0x3F316F6Cu, 0xBFABB5BDu, 0x3F800000u, 0x3FABB5BDu, 0xBF316F6Cu,
+    0x3F337ED4u, 0xBFB0EDB4u, 0x3F800000u, 0x3FB0EDB4u, 0xBF337ED4u,
+    0x3F359148u, 0xBFB5FD42u, 0x3F800000u, 0x3FB5FD42u, 0xBF359148u,
+    0x3F37A6C7u, 0xBFBAE24Au, 0x3F800000u, 0x3FBAE24Au, 0xBF37A6C7u,
+    0x3F39BF52u, 0xBFBF9AB7u, 0x3F800000u, 0x3FBF9AB7u, 0xBF39BF52u,
+    0x3F3BDAE8u, 0xBFC42480u, 0x3F800000u, 0x3FC42480u, 0xBF3BDAE8u,
+    0x3F3DF989u, 0xBFC87DA4u, 0x3F800000u, 0x3FC87DA4u, 0xBF3DF989u,
+    0x3F401B35u, 0xBFCCA42Fu, 0x3F800000u, 0x3FCCA42Fu, 0xBF401B35u,
+    0x3F423FEDu, 0xBFD0963Bu, 0x3F800000u, 0x3FD0963Bu, 0xBF423FEDu,
+    0x3F4467B0u, 0xBFD451EDu, 0x3F800000u, 0x3FD451EDu, 0xBF4467B0u,
+    0x3F46927Eu, 0xBFD7D579u, 0x3F800000u, 0x3FD7D579u, 0xBF46927Eu,
+    0x3F48C058u, 0xBFDB1F20u, 0x3F800000u, 0x3FDB1F20u, 0xBF48C058u,
+    0x3F4AF13Du, 0xBFDE2D34u, 0x3F800000u, 0x3FDE2D34u, 0xBF4AF13Du,
+    0x3F4D252Du, 0xBFE0FE17u, 0x3F800000u, 0x3FE0FE17u, 0xBF4D252Du,
+    0x3F4F5C29u, 0xBFE3903Bu, 0x3F800000u, 0x3FE3903Bu, 0xBF4F5C29u,
+};
+
+#endif /* APP_ENABLE_DSP_BENCH */

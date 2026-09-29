@@ -1,0 +1,10 @@
+# Public working-tree text policy.
+* text=auto eol=crlf
+
+# Generated coefficient and vector sources are text and retain CRLF checkout.
+src/dsp/dsp_vectors.c text eol=crlf
+src/dsp/dsp_coeffs.c  text eol=crlf
+
+# Preserve the byte-verbatim CMSIS-DSP vendor subset, including upstream
+# whitespace, without making first-import diff checks noisy.
+src/dsp/cmsis_dsp/** -whitespace

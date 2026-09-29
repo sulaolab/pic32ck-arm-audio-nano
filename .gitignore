@@ -1,0 +1,16 @@
+# MPLAB X build outputs
+build/
+dist/
+*.log
+
+# Generated MPLAB X project files
+pic32ck-arm-audio-nano.X/nbproject/Makefile-*
+pic32ck-arm-audio-nano.X/nbproject/Package-*
+pic32ck-arm-audio-nano.X/nbproject/private/
+.generated_files/
+
+# Editor and operating-system files
+.vscode/
+*.swp
+Thumbs.db
+desktop.ini
